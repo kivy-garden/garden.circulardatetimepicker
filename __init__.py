@@ -48,6 +48,7 @@ in Kv language:
 from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.garden.circularlayout import CircularLayout
+# from kivy.garden.recycleview import RecycleView
 from kivy.graphics import Line, Color, Ellipse
 from kivy.lang import Builder
 from kivy.metrics import dp
@@ -71,6 +72,7 @@ def rgb_to_hex(*color):
     return tor
 
 Builder.load_string("""
+
 <Number>:
     text_size: self.size
     valign: "middle"
@@ -472,10 +474,10 @@ class CircularTimePicker(BoxLayout):
     defaults to 0.
     """
 
-    time = ReferenceListProperty(hours, minutes)
+    time_list = ReferenceListProperty(hours, minutes)
     """Packs :attr:`hours` and :attr:`minutes` in a list for convenience.
 
-    :attr:`time` is a :class:`~kivy.properties.ReferenceListProperty`.
+    :attr:`time_list` is a :class:`~kivy.properties.ReferenceListProperty`.
     """
 
     # military = BooleanProperty(False)
@@ -530,14 +532,14 @@ class CircularTimePicker(BoxLayout):
     _m_picker = ObjectProperty(None)
     _bound = DictProperty({})
 
-    def _get_dt_time(self):
-        return datetime.time(*self.time)
-    def _set_dt_time(self, dt):
-        self.time = [dt.hour, dt.minute]
-    dt_time = AliasProperty(_get_dt_time, _set_dt_time, bind=("time",))
+    def _get_time(self):
+        return datetime.time(*self.time_list)
+    def _set_time(self, dt):
+        self.time_list = [dt.hour, dt.minute]
+    time = AliasProperty(_get_time, _set_time, bind=("time_list",))
     """Selected time as a datetime.time object.
 
-    :attr:`dt_time` is an :class:`~kivy.properties.AliasProperty`.
+    :attr:`time` is an :class:`~kivy.properties.AliasProperty`.
     """
 
     def _get_picker(self):
@@ -564,13 +566,13 @@ class CircularTimePicker(BoxLayout):
         super(CircularTimePicker, self).__init__(**kw)
         if self.hours >= 12:
             self._am = False
-        self.bind(time=self.on_time, picker=self._switch_picker, _am=self.on_ampm)
+        self.bind(time_list=self.on_time_list, picker=self._switch_picker, _am=self.on_ampm)
         self._h_picker = CircularHourPicker()
         self._m_picker = CircularMinutePicker()
         self.ids.timelabel.bind(on_ref_press=self.on_ref_press)
         self.ids.ampmlabel.bind(on_ref_press=self.on_ref_press)
         Clock.schedule_once(self.on_selected)
-        Clock.schedule_once(self.on_time)
+        Clock.schedule_once(self.on_time_list)
         Clock.schedule_once(lambda *a: self._switch_picker(noanim=True))
         #print "TIMEee", self.time
 
@@ -597,7 +599,7 @@ class CircularTimePicker(BoxLayout):
         elif self.picker == "minutes":
             self.minutes = self._picker.selected
 
-    def on_time(self, *a):
+    def on_time_list(self, *a):
         #print "TIME", self.time
         if not self._picker:
             return
@@ -669,6 +671,12 @@ class CircularTimePicker(BoxLayout):
             container.add_widget(picker)
             anim = Animation(scale=1, d=.5, t="out_back") & Animation(opacity=1, d=.5, t="out_cubic")
             Clock.schedule_once(lambda *a: anim.start(picker), .3)
+
+# class CalendarMonthView(GridLayout):
+#     month = BoundedNumericProperty(datetime.date.today().month, min=1, max=12)
+#     year = BoundedNumericProperty(datetime.date.today().year, min=1, max=9999)
+#     first_day_of_week = BoundedNumericProperty(0, min=0, max=6)
+
 
 if __name__ == "__main__":
     from kivy.base import runTouchApp
