@@ -58,8 +58,8 @@ from kivy.properties import NumericProperty, BoundedNumericProperty,\
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 
-
 from math import atan, pi, radians, sin, cos
+import datetime
 
 def map_number(x, in_min, in_max, out_min, out_max):
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
@@ -529,6 +529,16 @@ class CircularTimePicker(BoxLayout):
     _h_picker = ObjectProperty(None)
     _m_picker = ObjectProperty(None)
     _bound = DictProperty({})
+
+    def _get_dt_time(self):
+        return datetime.time(*self.time)
+    def _set_dt_time(self, dt):
+        self.time = [dt.hour, dt.minute]
+    dt_time = AliasProperty(_get_dt_time, _set_dt_time, bind=("time",))
+    """Selected time as a datetime.time object.
+
+    :attr:`dt_time` is an :class:`~kivy.properties.AliasProperty`.
+    """
 
     def _get_picker(self):
         if self.picker == "hours":
