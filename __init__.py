@@ -569,12 +569,15 @@ class CircularTimePicker(BoxLayout):
         self.bind(time_list=self.on_time_list, picker=self._switch_picker, _am=self.on_ampm)
         self._h_picker = CircularHourPicker()
         self._m_picker = CircularMinutePicker()
-        self.ids.timelabel.bind(on_ref_press=self.on_ref_press)
-        self.ids.ampmlabel.bind(on_ref_press=self.on_ref_press)
         Clock.schedule_once(self.on_selected)
         Clock.schedule_once(self.on_time_list)
+        Clock.schedule_once(self._init_later)
         Clock.schedule_once(lambda *a: self._switch_picker(noanim=True))
         #print "TIMEee", self.time
+
+    def _init_later(self, *args):
+        self.ids.timelabel.bind(on_ref_press=self.on_ref_press)
+        self.ids.ampmlabel.bind(on_ref_press=self.on_ref_press)
 
     def on_ref_press(self, ign, ref):
         if ref == "hours":
