@@ -418,7 +418,7 @@ class CircularMinutePicker(CircularNumberPicker):
     def __init__(self, **kw):
         super(CircularMinutePicker, self).__init__(**kw)
         self.min = 0
-        self.max = 60
+        self.max = 59
         self.multiples_of = 5
         self.number_format_string = "{:02d}"
         self.direction = "cw"
