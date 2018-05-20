@@ -409,7 +409,7 @@ class CircularNumberPicker(CircularLayout):
         elif angle > 2*pi:
             angle -= 2*pi
 
-        return int(angle / quota) + self.min
+        return min(int(angle / quota) + self.min, self.max-1)
 
 class CircularMinutePicker(CircularNumberPicker):
     """:class:`CircularNumberPicker` implementation for minutes.
@@ -418,7 +418,7 @@ class CircularMinutePicker(CircularNumberPicker):
     def __init__(self, **kw):
         super(CircularMinutePicker, self).__init__(**kw)
         self.min = 0
-        self.max = 59
+        self.max = 60
         self.multiples_of = 5
         self.number_format_string = "{:02d}"
         self.direction = "cw"
