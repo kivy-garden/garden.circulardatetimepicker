@@ -160,7 +160,7 @@ class CircularNumberPicker(CircularLayout):
     """
 
     max = NumericProperty(0)
-    """The last value of the range. Note that it behaves like xrange, so
+    """The last value of the range. Note that it behaves like range, so
     the actual last displayed value will be :attr:`max` - 1.
 
     :attr:`max` is a :class:`~kivy.properties.NumericProperty` and
@@ -246,7 +246,7 @@ class CircularNumberPicker(CircularLayout):
 
     def _get_shown_items(self):
         c = 0
-        for i in xrange(*self.range):
+        for i in range(*self.range):
             if i % self.multiples_of == 0:
                 c += 1
         return c
@@ -292,7 +292,7 @@ class CircularNumberPicker(CircularLayout):
 
     def _genitems(self, *a):
         self.clear_widgets()
-        for i in xrange(*self.range):
+        for i in range(*self.range):
             if i % self.multiples_of != 0:
                 continue
             n = Number(text=self.number_format_string.format(i), size_factor=self.number_size_factor, color=self.color)
